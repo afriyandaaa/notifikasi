@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:notifikasi/app/controllers/page_index_controller.dart';
 import 'package:notifikasi/app/modules/profile/controllers/profile_controller.dart';
+import 'package:notifikasi/app/utils/notification_manager.dart';
 import '../../../models/krs_model.dart';
 
 class HomeController extends GetxController {
   final pageC = Get.find<PageIndexController>();
-
+  final NotificationManager notificationManager =
+      Get.find<NotificationManager>();
   // API
   List<Kr> allKrs = [];
   final List<JadwalKrs> allData = [];

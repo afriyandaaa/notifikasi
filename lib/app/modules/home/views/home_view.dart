@@ -2,8 +2,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:notifikasi/app/utils/notification_manager.dart';
 import '../controllers/home_controller.dart';
+import 'package:intl/intl.dart';
 
 class HomeView extends GetView<HomeController> {
   @override
@@ -74,16 +74,40 @@ class HomeView extends GetView<HomeController> {
                                     "Sks: ${controller.allKrs[index].jadwal.sks}"),
                                 SizedBox(height: 15),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    NotificationManager()
+                                  onPressed: () async {
+                                    //  penggunaan metode simpleNotificationShow
+                                    String jamMulaiString = controller
+                                        .allKrs[index].jadwal.jamMulai;
+                                    DateTime jamMulai = DateFormat('HH:mm')
+                                        .parse(jamMulaiString);
+                                    jamMulai = jamMulai.subtract(Duration(
+                                        minutes:
+                                            5)); // jam mulai notifikasi 5 menit sebelum jam pelajaran mulai
+                                    String matkul = controller
+                                        .allKrs[index].jadwal.namaMatkul;
+                                    String ruang =
+                                        controller.allKrs[index].jadwal.ruang;
+                                    await controller.notificationManager
                                         .simpleNotificationShow(
-                                      controller
-                                          .allKrs[index].jadwal.namaMatkul,
-                                      controller.allKrs[index].jadwal.jamMulai,
-                                      controller.allKrs[index].jadwal.ruang,
+                                            matkul, jamMulai, ruang);
+                                    //  dialog notifikasi berhasil
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text('Notifikasi Berhasil'),
+                                        content: Text(
+                                            'Notifikasi telah dijadwalkan.'),
+                                        actions: [
+                                          TextButton(
+                                            child: Text('OK'),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
-                                  child: Text("Show Notification"),
+                                  child: Text('Jadwalkan Notifikasi'),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
